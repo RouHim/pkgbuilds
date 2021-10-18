@@ -9,7 +9,7 @@ url="https://github.com/docker/${_srcname}"
 license=('Apache')
 
 depends=()
-makedepends=('git' 'make')
+makedepends=('git' 'make' 'docker')
 provides=("${pkgname[0]%-git}")
 conflicts=("${pkgname[0]%-git}")
 
