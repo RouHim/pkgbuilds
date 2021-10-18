@@ -8,20 +8,8 @@ arch=('any')
 url="https://github.com/docker/${_srcname}"
 license=('Apache')
 
-depends=(
-    'python'
-    'python-docopt'
-    'python-yaml'
-    'python-requests'
-    'python-texttable'
-    'python-websocket-client'
-    'python-docker-py'
-    'python-dockerpty'
-    'python-six'
-    'python-jsonschema'
-    'python-setuptools'
-)
-makedepends=('git')
+depends=()
+makedepends=('git' 'make')
 provides=("${pkgname[0]%-git}")
 conflicts=("${pkgname[0]%-git}")
 
@@ -39,17 +27,13 @@ pkgver() {
 
 prepare() {
     cd "${srcdir}/${_srcname}"
-
-    # Remove upper bound on requirements
-    sed --regexp-extended --in-place 's/==(\s*[0-9]+(\.[0-9]+)*)/>=\1/g' requirements.txt
-    sed --regexp-extended --in-place "s/, < [0-9]+(\.[0-9]+)*//g" setup.py
 }
 
 package() {
     cd "${srcdir}/${_srcname}"
 
-    python setup.py install --root="${pkgdir}" --optimize=1
+    make
 
     install -D --mode=644 LICENSE "${pkgdir}/usr/share/licenses/${_srcname}/LICENSE"
-    install -D --mode=644 contrib/completion/bash/docker-compose "${pkgdir}/usr/share/bash-completion/completions/docker-compose"
+    install -D --mode=+x bin/docker-compose "${pkgdir}/usr/local/bin/docker-compose"
 }
